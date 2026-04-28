@@ -213,7 +213,8 @@ const InvoiceHistory = () => {
                                 )}
 
                                 <div className="text-[10px] text-slate-500 font-mono bg-white p-2 rounded border border-slate-200 w-full text-left whitespace-pre-wrap leading-tight">
-                                    {selectedInvoice.electronic_signature_data}
+                                    {selectedInvoice.electronic_signature_data.replace('Departamento: TI', 'Departamento: TIC')}
+                                    {/*selectedInvoice.electronic_signature_data*/}
                                 </div>
                             </div>
 

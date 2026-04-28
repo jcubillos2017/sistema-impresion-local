@@ -133,7 +133,7 @@ const PreInvoice = () => {
     const handleSave = async () => {
         if (!signatureFile) return alert('Debe subir la imagen de la firma');
 
-        const electronicSignature = `Firmado electrónicamente por: ${signerName}\nCargo: ${signerRole}\nDepartamento: TI\nServicio: Gestión Impresión\nFecha: ${new Date().toLocaleString('es-CL')}`;
+        const electronicSignature = `Firmado electrónicamente por: ${signerName}\nCargo: ${signerRole}\nDepartamento: TIC\nServicio: Gestión Impresión\nFecha: ${new Date().toLocaleString('es-CL')}`;
 
         const formData = new FormData();
         formData.append('billing_date', billingDate);
