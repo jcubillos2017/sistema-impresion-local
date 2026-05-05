@@ -13,6 +13,7 @@ const Printer = sequelize.define('Printer', {
     // Contadores iniciales o actuales
     status: { type: DataTypes.ENUM('active', 'blocked', 'maintenance'), defaultValue: 'active' },
     resolution_file: {type: DataTypes.STRING, allowNull: true},
+    ip_hostname: { type: DataTypes.STRING, allowNull: true },
 }, { tableName: 'printers', timestamps: false });
 
 // --- Relaciones ---

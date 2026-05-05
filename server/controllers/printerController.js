@@ -36,12 +36,12 @@ exports.getPrinters = async (req, res) => {
 // 2. Crear (Manual)
 exports.createPrinter = async (req, res) => {
     try {
-        const { serial_number, brand, model, type, inventory_code, seccion_id, observacion } = req.body;
+        const { serial_number, brand, model, type, inventory_code, seccion_id, observacion, ip_hostname } = req.body;
         const exists = await Printer.findOne({ where: { serial_number } });
         if (exists) return res.status(400).json({ message: 'Serie ya existe' });
 
         const newPrinter = await Printer.create({
-            serial_number, brand, model, type, inventory_code, seccion_id, status: 'active', observacion
+            serial_number, brand, model, type, inventory_code, seccion_id, status: 'active', observacion, ip_hostname
         });
         res.status(201).json(newPrinter);
     } catch (error) {

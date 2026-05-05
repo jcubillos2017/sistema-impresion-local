@@ -65,8 +65,7 @@ const startServer = async () => {
     // 1. Conectar DB
     await dbConnect();
     
-    sequelize.sync().then(() => { 
-    //sequelize.sync({ alter: true }).then(() => {    
+    sequelize.sync().then(() => {    
     console.log('✅ Base de datos sincronizada y actualizada');
     app.listen(PORT, () => {
         console.log(`🚀 Servidor corriendo en: http://localhost:${PORT}`);

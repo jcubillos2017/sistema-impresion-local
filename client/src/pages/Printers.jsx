@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import * as XLSX from 'xlsx';
-import { Plus, Search, Printer as PrinterIcon, MapPin, Edit, Trash2, FileSpreadsheet, Droplets, X, Save } from 'lucide-react';
+import { Plus, Search, Printer as PrinterIcon, MapPin, Edit, Trash2, FileSpreadsheet, Droplets, X, Save, ArrowUpDown } from 'lucide-react';
 
 const Printers = () => {
   // --- ESTADOS ---
@@ -10,6 +10,7 @@ const Printers = () => {
   const [orgTree, setOrgTree] = useState([]); // Árbol para los selectores
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
   // Estados del Modal
   const [showModal, setShowModal] = useState(false);
@@ -24,7 +25,8 @@ const Printers = () => {
     type: 'B/N',
     inventory_code: '',
     status: 'active',
-    observacion: '' // <--- NUEVO CAMPO
+    observacion: '', // <--- NUEVO CAMPO
+    ip_hostname: ''
   });
 
   // Estados Selectores en Cascada
@@ -71,8 +73,8 @@ const Printers = () => {
 
   const handleOpenCreate = () => {
     setIsEditing(false);
-    setFormData({ 
-      serial_number: '', brand: '', model: '', type: 'B/N', inventory_code: '', status: 'active', observacion: '' 
+    setFormData({
+      serial_number: '', brand: '', model: '', type: 'B/N', inventory_code: '', status: 'active', observacion: '', ip_hostname: '' 
     });
     setSelectedDir(''); setSelectedDep(''); setSelectedSub(''); setSelectedSec('');
     setShowModal(true);
@@ -90,7 +92,8 @@ const Printers = () => {
       type: printer.type || 'B/N',
       inventory_code: printer.inventory_code || '',
       status: printer.status,
-      observacion: printer.observacion || '' // Cargar observación o vacío
+      observacion: printer.observacion || '', // Cargar observación o vacío
+      ip_hostname: printer.ip_hostname || ''
     });
 
     // Reconstruir cascada de selectores
@@ -177,6 +180,7 @@ const Printers = () => {
           else if (k === 'departamento') newRow['Departamento'] = row[key];
           else if (k === 'subdepartamento') newRow['Subdepartamento'] = row[key];
           else if (k === 'seccion') newRow['Seccion'] = row[key];
+          else if (k === 'ip' || k === 'hostname') newRow['ip_hostname'] = row[key];
         });
         return newRow;
       });
@@ -209,8 +213,27 @@ const Printers = () => {
   // --- RENDER ---
   const filteredPrinters = printers.filter(p => 
     p.serial_number.toLowerCase().includes(filter.toLowerCase()) ||
-    p.model.toLowerCase().includes(filter.toLowerCase())
+    p.model.toLowerCase().includes(filter.toLowerCase()) ||
+    (p.ip_hostname && p.ip_hostname.toLowerCase().includes(filter.toLowerCase()))
   );
+
+  // --- ORDENAMIENTO ---
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedPrinters = [...filteredPrinters].sort((a, b) => {
+    if (!sortConfig.key) return 0;
+    
+    const valA = (a[sortConfig.key] || '').toString().toLowerCase();
+    const valB = (b[sortConfig.key] || '').toString().toLowerCase();
+
+    return sortConfig.direction === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+  });
 
   return (
     <div className="space-y-6">
@@ -247,7 +270,12 @@ const Printers = () => {
             <tr>
               <th className="p-4 font-semibold">Equipo</th>
               <th className="p-4 font-semibold">Ubicación (Org)</th>
-              <th className="p-4 font-semibold">Serie</th>
+              <th className="p-4 font-semibold">IP / Hostname</th>
+              <th className="p-4 font-semibold cursor-pointer hover:bg-slate-100 transition-colors" onClick={() => handleSort('serial_number')}>
+                <div className="flex items-center gap-1">
+                  Serie <ArrowUpDown size={14} className="text-slate-400" />
+                </div>
+              </th>
               <th className="p-4 font-semibold text-center">Estado</th>
               <th className="p-4 font-semibold text-right">Acciones</th>
             </tr>
@@ -255,10 +283,10 @@ const Printers = () => {
           <tbody className="divide-y divide-slate-100 text-sm">
             {loading ? (
               <tr><td colSpan="5" className="p-8 text-center text-slate-400">Cargando...</td></tr>
-            ) : filteredPrinters.length === 0 ? (
+            ) : sortedPrinters.length === 0 ? (
               <tr><td colSpan="5" className="p-8 text-center text-slate-400">No se encontraron impresoras</td></tr>
             ) : (
-              filteredPrinters.map((printer) => {
+              sortedPrinters.map((printer) => {
                 const isColor = printer.type?.toLowerCase().includes('color');
                 return (
                   <tr key={printer.id} className="hover:bg-slate-50 transition-colors">
@@ -300,6 +328,9 @@ const Printers = () => {
                         </div>
                       ) : <span className="text-slate-400 italic">Sin asignar</span>}
                     </td>
+                <td className="p-4 font-mono text-slate-500 text-xs">
+                  {printer.ip_hostname || <span className="italic opacity-50">No asignada</span>}
+                </td>
                     <td className="p-4 font-mono text-slate-600">{printer.serial_number}</td>
                     <td className="p-4 text-center">
                       <span className={`px-2 py-1 rounded-full text-xs font-bold ${printer.status === 'active' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'}`}>
@@ -346,6 +377,11 @@ const Printers = () => {
                   <label className="block text-sm font-medium text-slate-600 mb-1">Código Inventario</label>
                   <input type="text" className="w-full border p-2 rounded-lg focus:ring-2 focus:ring-accent outline-none"
                     value={formData.inventory_code} onChange={e => setFormData({...formData, inventory_code: e.target.value})} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-600 mb-1">IP / Hostname</label>
+                  <input type="text" className="w-full border p-2 rounded-lg focus:ring-2 focus:ring-accent outline-none" placeholder="Ej: 192.168.1.50"
+                    value={formData.ip_hostname} onChange={e => setFormData({...formData, ip_hostname: e.target.value})} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-600 mb-1">Marca</label>
