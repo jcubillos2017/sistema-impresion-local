@@ -25,7 +25,7 @@ const Printers = () => {
     type: 'B/N',
     inventory_code: '',
     status: 'active',
-    observacion: '', // <--- NUEVO CAMPO
+    observacion: '',
     ip_hostname: ''
   });
 
@@ -329,7 +329,19 @@ const Printers = () => {
                       ) : <span className="text-slate-400 italic">Sin asignar</span>}
                     </td>
                 <td className="p-4 font-mono text-slate-500 text-xs">
-                  {printer.ip_hostname || <span className="italic opacity-50">No asignada</span>}
+                  {printer.ip_hostname ? (
+                    <a 
+                      href={`http://${printer.ip_hostname}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 hover:underline"
+                      title="Abrir interfaz web de la impresora"
+                    >
+                      {printer.ip_hostname}
+                    </a>
+                  ) : (
+                    <span className="italic opacity-50">No asignada</span>
+                  )}
                 </td>
                     <td className="p-4 font-mono text-slate-600">{printer.serial_number}</td>
                     <td className="p-4 text-center">

@@ -196,7 +196,7 @@ exports.getConsumption = async (req, res) => {
         {
           model: Printer,
           where: printerFilter,
-          attributes: ["id", "serial_number", "model", "brand", "location"],
+          attributes: ["id", "serial_number", "model", "brand", "location", "type"],
           include: [{ model: Seccion, attributes: ["nombre"] }], //TRAEMOS EL NOMBRE DE LA SECCIÓN
         },
       ],
@@ -232,7 +232,7 @@ exports.getConsumption = async (req, res) => {
         organization: curr.Printer.Seccion
           ? curr.Printer.Seccion.nombre
           : curr.Printer.location || "No Asignada",
-        type: curr.color_pages > 0 ? "Color" : "B/N", // Detectar tipo
+        type: curr.Printer.type || (curr.color_pages > 0 ? "Color" : "B/N"), // Catalogación estricta de BD
 
         // Lecturas
         current_reading: curr.total_pages,
@@ -321,7 +321,7 @@ exports.getMonthlyTotals = async (req, res) => {
         {
           model: Printer,
           where: printerFilter,
-          attributes: ["id", "serial_number", "model", "brand", "location"],
+          attributes: ["id", "serial_number", "model", "brand", "location", "type"],
           include: [{ model: Seccion, attributes: ["nombre"] }], // Usamos 'nombre' como corregimos antes
         },
       ],
@@ -346,7 +346,7 @@ exports.getMonthlyTotals = async (req, res) => {
       simple_counter: row.simple_pages,
 
       // Detectar tipo
-      type: row.color_pages > 0 ? "Color" : "B/N",
+      type: row.Printer.type || (row.color_pages > 0 ? "Color" : "B/N"), // Catalogación estricta de BD
     }));
 
     res.json({

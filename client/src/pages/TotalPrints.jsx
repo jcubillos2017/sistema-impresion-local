@@ -88,6 +88,7 @@ const TotalPrints = () => {
     const excelRows = dataToExport.map(item => ({
       "MODELO": item.model,
       "N SERIE": item.serial,
+      "TIPO": item.type || "B/N",
       "ORGANIZACION": item.organization || "No Asignada",
       "LECTURA TOTAL": item.total_counter,
       "LECTURA COLOR": item.color_counter,

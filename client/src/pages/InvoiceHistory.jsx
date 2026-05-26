@@ -137,7 +137,7 @@ const InvoiceHistory = () => {
                 </table>
             </div>
 
-            {/* MODAL DE DETALLE */}
+            {/* MODAL DETALLE */}
             {selectedInvoice && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
                     <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
@@ -213,7 +213,7 @@ const InvoiceHistory = () => {
                                 )}
 
                                 <div className="text-[10px] text-slate-500 font-mono bg-white p-2 rounded border border-slate-200 w-full text-left whitespace-pre-wrap leading-tight">
-                                    {selectedInvoice.electronic_signature_data.replace('Departamento: TI', 'Departamento: TIC')}
+                                    {selectedInvoice.electronic_signature_data.replace('Departamento: TI', 'Departamento: TI')}
                                     {/*selectedInvoice.electronic_signature_data*/}
                                 </div>
                             </div>

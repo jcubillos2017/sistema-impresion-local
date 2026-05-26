@@ -91,7 +91,7 @@ const Consumption = () => {
     // Filtro Tipo
     if (filterType !== "ALL") {
       processed = processed.filter((item) => {
-        const isColor = item.consumption_color > 0 || item.type === "Color";
+        const isColor = item.type === "Color";
         return filterType === "Color" ? isColor : !isColor;
       });
     }
@@ -124,6 +124,7 @@ const Consumption = () => {
     const excelRows = dataToExport.map((item) => ({
       MODELO: item.model,
       "N SERIE": item.serial,
+      TIPO: item.type || "B/N",
       ORGANIZACION: item.organization || "No Asignada",
       "B/N": item.consumption_bn,
       COLOR: item.consumption_color,
@@ -382,12 +383,12 @@ const Consumption = () => {
                       <td className="p-4 text-center">
                         <span
                           className={`px-2 py-1 rounded text-[10px] font-bold ${
-                            item.consumption_color > 0 || item.type === "Color"
+                            item.type === "Color"
                               ? "bg-purple-100 text-purple-700"
                               : "bg-slate-100 text-slate-600"
                           }`}
                         >
-                          {item.consumption_color > 0 || item.type === "Color"
+                          {item.type === "Color"
                             ? "COLOR"
                             : "B/N"}
                         </span>

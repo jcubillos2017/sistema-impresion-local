@@ -8,6 +8,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [loading, setLoading] = useState(false);
+  const [logoLoaded, setLogoLoaded] = useState(false);
 
   // Manejar cambios en los inputs
   const handleChange = (e) => {
@@ -51,14 +52,24 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Tarjeta del Login */}
       <div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-2xl transform transition-all hover:scale-[1.01]">
+        
         {/* Encabezado con Icono */}
-        <div className="text-center mb-8">
-          <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Printer className="w-8 h-8 text-accent" />
-          </div>
-          <h2 className="text-3xl font-bold text-slate-800">Inicia Sesión</h2>
+
+        <div className="mt-6 flex flex-col items-center gap-4">
+          <img
+            src="/palacio-la-moneda-Cvh-FX3V.svg"
+            alt="Palacio La Moneda"
+            className="w-full max-w-xs mx-auto"
+          />
+        </div>
+
+        {/* Encabezado con Icono */}
+
+        <div className="text-center mb-3">
+          {/* modificacion 
+          <h2 className="text-3xl font-bold text-slate-800">Inicia Sesión</h2> */}
           <p className="text-slate-500 text-sm mt-2">
-            Sistema de Gestión de Impresoras
+            Sistema de Gestión de Impresiones
           </p>
         </div>
 
@@ -113,21 +124,24 @@ const Login = () => {
         <div className="mt-6 text-center text-xs text-gray-400">
           Versión 2.0.0 &copy; 2026 Gestión TI
         </div>
-        
       </div>
       {/* --- FOOTER (PEGADO AL BORDE INFERIOR) --- */}
       <footer className="absolute bottom-6 w-full text-center z-10">
+        
+
         <p className="text-slate-400 text-xs font-medium">
           &copy; {new Date().getFullYear()} Sistema de Gestión de Impresión.
         </p>
         <div className="flex justify-center gap-4 mt-2 text-[10px] text-slate-400/60 uppercase tracking-widest font-bold">
-            <span>Presidencia de la Republica</span>
-            <span>•</span>
-            <span>Departamento de Tecnolagia de la Informacion y la Comunicacion</span>
-            <span>•</span>
-            <span>Subdepartamento de operaciones y Soporte</span>
-            <span>•</span>
-            <span>v1.0.2</span>
+          <span>Presidencia de la Republica</span>
+          <span>•</span>
+          <span>
+            Departamento de Tecnolagia de la Informacion y la Comunicacion
+          </span>
+          <span>•</span>
+          <span>Subdepartamento de operaciones y Soporte</span>
+          <span>•</span>
+          <span>v1.0.2</span>
         </div>
       </footer>
     </div>
